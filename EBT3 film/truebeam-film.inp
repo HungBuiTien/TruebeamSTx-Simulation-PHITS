@@ -1,0 +1,426 @@
+$OMP=4
+[ Title ]
+TrueBeam STx simulation
+
+[ Parameters ]
+ icntl	  =           0     # (D=0) 3:ECH 5:NOR 6:SRC 7,8:GSH 11:DSH 12:DUMP
+ maxcas   =       10000     # (D=10) number of particles per one batch
+ maxbch   =         100     # (D=10) number of batches
+ bnum     =          80
+ ipnint   =           1     # (D=0) 0: no, 1: consider photo-nuclear reaction
+ negs     =           1     # (D=-1) =-1:original, =0:No, =1:EGS
+ emin(12) =       0.512     # cut-off energy for electron
+ emin(13) =       0.512     # cut-of energy for positron
+ emin(14) =        0.01     # cut-off energy for photon
+
+[ Source ]
+ s-type =   1             # cylindrical source
+   proj =  electron       # kind of incident particle         
+     r0 =   0.125         # radius [cm]
+     r1 =   0.0           # minimum radius [cm]
+     x0 =   0.0           # (D=0.0) center position of x-axis [cm]
+     y0 =   0.0           # (D=0.0) center position of y-axis [cm]
+     z0 =  -0.50138       # minimum position of z-axis [cm]
+     z1 =  -0.50138       # maximum position of z-axis [cm]
+     dir =  1.0           # z-direction of beam [cosine]
+    phi =   0.0000        # azimuthal angle of beam [degree]
+ e-type =   2             # gaussian energy distribution
+    eg0 =   6.            # center of energy distribution [MeV]
+    eg1 =   0.127         # FWHM [MeV]
+    eg2 =   0.1
+    eg3 =   10.0
+
+[ Material ]
+ mat[1]   $ Tungsten
+     W    1
+ mat[2]   $ Copper
+     Cu	  1
+ mat[3]   $ Berilium
+     Be   1
+ mat[4]   $ Kapton
+ 	 C    22
+ 	 H    10
+ 	 N    2
+ 	 O    5
+ mat[5] $ Mylar
+ 	C	  10
+ 	H	  8
+ 	O	  4
+ mat[6] $ Steel
+ 	Fe	  -0.935
+ 	S     -0.01
+ 	Mn    -0.05
+ 	C     -0.005
+ mat[7] $ Water
+    H     2
+    O     1
+ mat[8] $ Polyester base
+    H    -0.04
+    C    -0.63
+    O    -0.33
+ mat[9] $ Active layer
+    H    -0.097
+    Li   -0.009
+    C    -0.584
+    N    -0.001
+    O    -0.284
+    Na   -0.004
+    S    -0.002
+    Cl   -0.011
+    Br   -0.008
+
+[ Mat Name Color ]
+ mat     name     color
+ 1       tungsten yellow
+ 2       copper   orangeyellow
+ 3       berilium pink
+ 4       kapton   green
+ 5       mylar    white
+ 7       water    blue
+
+[ Surface ]
+ 99  rpp -150 150 -150 150 -150 150
+ 1   px  -0.6
+ 2   px   0.6
+ 3   py  -0.6
+ 4   py   0.6
+ 5   pz   0.1561
+ 6   pz   0.245
+ 7   pz  -1.38E-3
+ 8   cz   1
+ 9   cz   8
+ 10  pz  -4
+ 11  pz   2
+ 12  cz   8
+ 13  pz   3.1
+ 14  pz   9.3
+ 15  trc  0 0 3.0 0 0 6.4 0.5 1.7658592
+ 16  cz   3.6
+ 17  pz   9.98
+ 18  pz   10.02
+ set:c1[0.08128]             $ window layer
+ set:c2[0.0508]              $ plate layer
+ 19  cz   5.08-1E-4
+ 20  pz   15.7-c1/2+1E-4
+ 21  pz   16.2+c2/2-1E-4
+ 22  cz   5.08
+ 23  pz   15.7-c1/2
+ 24  pz   15.7+c1/2
+ 25  pz   15.8-c2/2
+ 26  pz   15.8+c2/2
+ 27  pz   15.9-c1/2
+ 28  pz   15.9+c1/2
+ 29  pz   16.0-c1/2
+ 30  pz   16.0+c1/2
+ 31  pz   16.1-c1/2
+ 32  pz   16.1+c1/2
+ 33  pz   16.2-c2/2
+ 34  pz   16.2+c2/2
+ 35  rcc  0 0 0.05 0 0 0.1 6.3
+ 36  rpp  -4.5 4.5 -9.3 9.3 -3.9 3.9
+ 37  rpp  -9.3 9.3 -4.5 4.5 -3.9 3.9
+ 40  px   -15.6
+ 41  px   15.6
+ 42  py   -0.25
+ 43  py   0.25
+ 44  pz   -3.45
+ 45  pz   3.45
+ 46  cy   16
+ 47  py   -0.125
+ 48  py   0.125
+ 97  rpp  -15 15 -15 15 100.1561 130.1561
+ set:c3[46.5] $ MLC pos
+ 98  rpp -32+1E-4 32-1E-4 -16+1E-4 16-1E-4 c3-3.45+1E-4 c3+3.45-1E-4 
+ set:c4[110.1561] $ film pos
+ 50  px   -5
+ 51  px    5
+ 52  py   -5
+ 53  py    5
+ 54  pz    c4-(28/2)*1E-5
+ 55  pz    c4+(28/2)*1E-5
+ 56  pz    c4-(28/2)*1E-5-125*1E-5
+ 57  pz    c4+(28/2)*1E-5+125*1E-5
+
+[ Cell ]
+ 990  -1   99                               $ Outer cell
+ 980   0  -99 #1 #2 #3 #4 #5 #6 #14 #15 #16 
+             #17 #18 #19 #20 #970 #971 #972 $ World volume
+
+ $ ------------------------------------------------------
+ $ Targer construction
+ $ ------------------------------------------------------
+ 1    1  -19.3  (1 -2 3 -4 5 -6)          $ Target layer A
+ 2    2  -8.96  (1 -2 3 -4 7 -5)          $ Target layer B
+
+ $ ------------------------------------------------------
+ $ Primary collimator
+ $ ------------------------------------------------------
+ 3    1  -19.3  (8 -9 10 -11)            $ Upper collimator
+ 4    1  -19.3  (-12 13 -14 #(-15))      $ Lower collimator
+
+ $ ------------------------------------------------------
+ $ Vacuum window
+ $ ------------------------------------------------------
+ 5    3  -1.848 (-16 17 -18)             $ Berilium window
+
+ $ ------------------------------------------------------
+ $ Ion chamber
+ $ ------------------------------------------------------
+ 6    0         (-19 20 -21) Fill =6     $ Ion chamber container
+ 7    0         #8 #9 #10 #11 #12 #13 U =6
+ 8    4  -1.42  (-22 23 -24) U =6         $ Window layer 1
+ 9    4  -1.42  (-22 25 -26) U =6
+ 10   4  -1.42  (-22 27 -28) U =6         $ Window layer 2
+ 11   4  -1.42  (-22 29 -30) U =6
+ 12   4  -1.42  (-22 31 -32) U =6         $ Window layer 2
+ 13   4  -1.42  (-22 33 -34) U =6
+
+ $ ------------------------------------------------------
+ $  Mirror
+ $ ------------------------------------------------------
+ 14   5  -1.4   (-35) trcl =1             $ Mirror
+
+ $ ------------------------------------------------------
+ $  Jaws
+ $ ------------------------------------------------------
+ 15   1  -19.3  (-36) trcl =2             $ Jaws 1X
+ 16   1  -19.3  (-36) trcl =3             $ Jaws 2X
+ 17   1  -19.3  (-37) trcl =4             $ Jaws 1Y
+ 18   1  -19.3  (-37) trcl =5             $ Jaws 2Y
+
+ $ ------------------------------------------------------
+ $  Water phantom
+ $ ------------------------------------------------------
+ 19   7  -1.0   (-97) #970 #971 #972
+
+ $ ------------------------------------------------------
+ $  EBT3 film
+ $ ------------------------------------------------------
+ 970  9  -1.20  (50 -51 52 -53 54 -55)
+ 971  8  -1.35  (50 -51 52 -53 -54 56)
+ 972  8  -1.35  (50 -51 52 -53 55 -57)
+
+ $ ------------------------------------------------------
+ $  MLC HD120
+ $ ------------------------------------------------------
+ 20   0         (-98) Fill =20             $ MLC container
+ 21   0         #22 #23 #24 #25 #26 #27 #28 #29 #30 #31
+ 				#32 #33 #34 #35 #36 #37 #38 #39 #40 #41
+ 				#42 #43 #44 #45 #46 #47 #48 #49 #50 #51
+ 				#52 #53 #54 #55 #56 #57 #58 #59 #60 #61
+ 				#62 #63 #64 #65 #66 #67 #68 #69 #70 #71
+ 				#72 #73 #74 #75 #76 #77 #78 #79 #80 #81
+ 				#82 #83 #84 #85 #86 #87 #88 #89 #90 #91
+ 				#92 #93 #94 #95 #96 #97 #98 #99 #100 #101
+ 				#102 #103 #104 #105 #106 #107 #108 #109
+ 				#110 #111 #112 #113 #114 #115 #116 #117
+ 				#118 #119 #120 #121 #122 #123 #124 #125
+ 				#126 #127 #128 #129 #130 #131 #132 #133
+ 				#134 #135 #136 #137 #138 #139 #140 #141 U =20
+ 22   1  -19.3  (40 -41 42 -43 44 -45):(41 42 -43 -46)
+                TRCL =6 U =20
+ 23	like	22	but	trcl=	7	u=20
+ 24	like	22	but	trcl=	8	u=20
+ 25	like	22	but	trcl=	9	u=20
+ 26	like	22	but	trcl=	10	u=20
+ 27	like	22	but	trcl=	11	u=20
+ 28	like	22	but	trcl=	12	u=20
+ 29	like	22	but	trcl=	13	u=20
+ 30	like	22	but	trcl=	14	u=20
+ 31	like	22	but	trcl=	15	u=20
+ 32	like	22	but	trcl=	16	u=20
+ 33	like	22	but	trcl=	17	u=20
+ 34	like	22	but	trcl=	18	u=20
+ 35	like	22	but	trcl=	19	u=20
+ 36   1  -19.3  (40 -41 47 -48 44 -45):(41 47 -48 -46)
+                TRCL =20 U =20
+ 37	like	36	but	trcl=	21	u=20
+ 38	like	36	but	trcl=	22	u=20
+ 39	like	36	but	trcl=	23	u=20
+ 40	like	36	but	trcl=	24	u=20
+ 41	like	36	but	trcl=	25	u=20
+ 42	like	36	but	trcl=	26	u=20
+ 43	like	36	but	trcl=	27	u=20
+ 44	like	36	but	trcl=	28	u=20
+ 45	like	36	but	trcl=	29	u=20
+ 46	like	36	but	trcl=	30	u=20
+ 47	like	36	but	trcl=	31	u=20
+ 48	like	36	but	trcl=	32	u=20
+ 49	like	36	but	trcl=	33	u=20
+ 50	like	36	but	trcl=	34	u=20
+ 51	like	36	but	trcl=	35	u=20
+ 52	like	36	but	trcl=	36	u=20
+ 53	like	36	but	trcl=	37	u=20
+ 54	like	36	but	trcl=	38	u=20
+ 55	like	36	but	trcl=	39	u=20
+ 56	like	36	but	trcl=	40	u=20
+ 57	like	36	but	trcl=	41	u=20
+ 58	like	36	but	trcl=	42	u=20
+ 59	like	36	but	trcl=	43	u=20
+ 60	like	36	but	trcl=	44	u=20
+ 61	like	36	but	trcl=	45	u=20
+ 62	like	36	but	trcl=	46	u=20
+ 63	like	36	but	trcl=	47	u=20
+ 64	like	36	but	trcl=	48	u=20
+ 65	like	36	but	trcl=	49	u=20
+ 66	like	36	but	trcl=	50	u=20
+ 67	like	36	but	trcl=	51	u=20
+
+ 68	like	22	but	trcl=	52	u=20
+ 69	like	22	but	trcl=	53	u=20
+ 70	like	22	but	trcl=	54	u=20
+ 71	like	22	but	trcl=	55	u=20
+ 72	like	22	but	trcl=	56	u=20
+ 73	like	22	but	trcl=	57	u=20
+ 74	like	22	but	trcl=	58	u=20
+ 75	like	22	but	trcl=	59	u=20
+ 76	like	22	but	trcl=	60	u=20
+ 77	like	22	but	trcl=	61	u=20
+ 78	like	22	but	trcl=	62	u=20
+ 79	like	22	but	trcl=	63	u=20
+ 80	like	22	but	trcl=	64	u=20
+ 81	like	22	but	trcl=	65	u=20
+
+ 82   1  -19.3  (40 -41 42 -43 44 -45):(-40 42 -43 -46)
+                TRCL =66 U =20
+ 83	like	82	but	trcl=	67	u=20
+ 84	like	82	but	trcl=	68	u=20
+ 85	like	82	but	trcl=	69	u=20
+ 86	like	82	but	trcl=	70	u=20
+ 87	like	82	but	trcl=	71	u=20
+ 88	like	82	but	trcl=	72	u=20
+ 89	like	82	but	trcl=	73	u=20
+ 90	like	82	but	trcl=	74	u=20
+ 91	like	82	but	trcl=	75	u=20
+ 92	like	82	but	trcl=	76	u=20
+ 93	like	82	but	trcl=	77	u=20
+ 94	like	82	but	trcl=	78	u=20
+ 95	like	82	but	trcl=	79	u=20
+
+ 96   1  -19.3  (40 -41 47 -48 44 -45):(-40 47 -48 -46)
+                TRCL =80 U =20
+ 97	like	96	but	trcl=	81	u=20
+ 98	like	96	but	trcl=	82	u=20
+ 99	like	96	but	trcl=	83	u=20
+ 100	like	96	but	trcl=	84	u=20
+ 101	like	96	but	trcl=	85	u=20
+ 102	like	96	but	trcl=	86	u=20
+ 103	like	96	but	trcl=	87	u=20
+ 104	like	96	but	trcl=	88	u=20
+ 105	like	96	but	trcl=	89	u=20
+ 106	like	96	but	trcl=	90	u=20
+ 107	like	96	but	trcl=	91	u=20
+ 108	like	96	but	trcl=	92	u=20
+ 109	like	96	but	trcl=	93	u=20
+ 110	like	96	but	trcl=	94	u=20
+ 111	like	96	but	trcl=	95	u=20
+ 112	like	96	but	trcl=	96	u=20
+ 113	like	96	but	trcl=	97	u=20
+ 114	like	96	but	trcl=	98	u=20
+ 115	like	96	but	trcl=	99	u=20
+ 116	like	96	but	trcl=	100	u=20
+ 117	like	96	but	trcl=	101	u=20
+ 118	like	96	but	trcl=	102	u=20
+ 119	like	96	but	trcl=	103	u=20
+ 120	like	96	but	trcl=	104	u=20
+ 121	like	96	but	trcl=	105	u=20
+ 122	like	96	but	trcl=	106	u=20
+ 123	like	96	but	trcl=	107	u=20
+ 124	like	96	but	trcl=	108	u=20
+ 125	like	96	but	trcl=	109	u=20
+ 126	like	96	but	trcl=	110	u=20
+ 127	like	96	but	trcl=	111	u=20 
+
+ 128	like	82	but	trcl=	112	u=20
+ 129	like	82	but	trcl=	113	u=20
+ 130	like	82	but	trcl=	114	u=20
+ 131	like	82	but	trcl=	115	u=20
+ 132	like	82	but	trcl=	116	u=20
+ 133	like	82	but	trcl=	117	u=20
+ 134	like	82	but	trcl=	118	u=20
+ 135	like	82	but	trcl=	119	u=20
+ 136	like	82	but	trcl=	120	u=20
+ 137	like	82	but	trcl=	121	u=20
+ 138	like	82	but	trcl=	122	u=20
+ 139	like	82	but	trcl=	123	u=20
+ 140	like	82	but	trcl=	124	u=20
+ 141	like	82	but	trcl=	125	u=20
+
+[ Transform ]
+tr1 0 0 17.5
+      0.9781476 0 0.2079117 
+      0.0000000 1 0.0000000 
+      -0.2079117 0 0.9781476 1
+ $ Field 10X10
+  tr2   6.29214       0 35.73036
+        0.99878559    0 -0.04926814
+        0.00000000    1  0.00000000
+        0.04926814    0  0.99878559 1  $ Jaw 1X pos    
+
+  tr3  -6.29214       0 35.73036 
+        0.99878559    0 0.04926814
+        0.00000000    1 0.00000000
+       -0.04926814    0 0.99878559 1  $ Jaw 2X pos  
+
+  tr4   0 5.8427      26.74159  
+        1 0.00000000  0.00000000
+        0 0.99878559 -0.04926814
+        0 0.04926814  0.99878559 1    $ Jaw 1Y pos 
+
+  tr5   0 -5.8427     26.74159
+        1  0.00000000 0.00000000
+        0  0.99878559 0.04926814
+        0 -0.04926814 0.99878559 1   $ Jaw 2Y pos 
+ infl:{MLC-pos_open_2x2.in}
+
+[ T - T r a c k ]
+    title = Track in EBT3 Film
+     mesh =  xyz            # mesh type is xyz scoring mesh
+   x-type =    2            # x-mesh is linear given by xmin, xmax and nx
+     xmin =   -2.5          # minimum value of x-mesh points
+     xmax =    2.5          # maximum value of x-mesh points
+       nx =   100           # number of x-mesh points
+   y-type =    2            # y-mesh is linear given by ymin, ymax and ny
+     ymin =   -2.5          # minimum value of y-mesh points
+     ymax =    2.5          # maximum value of y-mesh points
+       ny =   100           # number of y-mesh points
+   z-type =    2            # z-mesh is linear given by zmin, zmax and nz
+     zmin =   c4-0.0014     # minimum value of z-mesh points
+     zmax =   c4+0.0014     # maximum value of z-mesh points
+       nz =    1            # number of z-mesh points
+   e-type =    1
+       ne =    1
+               0    500    
+     unit =    1            # unit is [1/cm^2/source]
+     axis =   xy            # axis of output
+     file = track-xy.out    # file name of output for the above axis
+     part =  all      
+    gshow =    1            # 0: no 1:bnd, 2:bnd+mat, 3:bnd+reg 4:bnd+lat
+   epsout =    1            # (D=0) generate eps file by ANGEL 
+
+[ T-Deposit ] off
+    title = Deposit in EBT3 Film
+     mesh =  xyz            # mesh type is xyz scoring mesh
+   x-type =    2            # x-mesh is linear given by xmin, xmax and nx
+     xmin =   -2.5          # minimum value of x-mesh points
+     xmax =    2.5          # maximum value of x-mesh points
+       nx =   100           # number of x-mesh points
+   y-type =    2            # y-mesh is linear given by ymin, ymax and ny
+     ymin =   -2.5          # minimum value of y-mesh points
+     ymax =    2.5          # maximum value of y-mesh points
+       ny =   100           # number of y-mesh points
+   z-type =    2            # z-mesh is linear given by zmin, zmax and nz
+     zmin =   c4-0.0014     # minimum value of z-mesh points
+     zmax =   c4+0.0014     # maximum value of z-mesh points
+       nz =    1            # number of z-mesh points
+     unit =    0            # unit is [Gy/source]
+  2D-type =    3            # 1:Cont, 2:Clust, 3:Color, 4:xyz, 5:mat, 6:Clust+Cont, 7:Col+Cont
+     axis =   xy            # axis of output
+     file = deposit.out     # file name of output for the above axis
+ material =  all            # (D=all) number of specific material
+   output = dose            # only heat is written
+   epsout =    1            # (D=0) generate eps file by ANGEL
+   vtkout =    1
+    gshow =    1            # 0: no 1:bnd, 2:bnd+mat, 3:bnd+reg 4:bnd+lat
+
+[ End ]
